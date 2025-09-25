@@ -18,6 +18,8 @@ intents.message_content = True
 
 client = MyClient(intents=intents)
 
+
+# For python style coding -> Use main
 def main() -> None:
     client.run(dotenv_values["BOT_TOKEN"])
 
