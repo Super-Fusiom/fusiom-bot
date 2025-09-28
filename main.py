@@ -1,32 +1,43 @@
 import discord
+from discord.ext import commands
 from dotenv import dotenv_values
 
 dotenv_values = dotenv_values(".env")
-bot_token: str = dotenv_values["BOT_TOKEN"]
+bot_token = dotenv_values["BOT_TOKEN"]
 channel_id = dotenv_values["CHANNEL_ID"]
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.message_content = True
 
 
-client = discord.Client(intents=intents)
+bot = commands.Bot(command_prefix="!", intents=intents)
 
 
-@client.event
-async def on_ready() -> None:
-    print(f"{client.user} has connected to Discord!")
-
-
-@client.event
-async def on_message(message: discord.Message) -> None:
-    if message.author == client.user:
+@bot.listen('on_message')
+async def message_handler(message: discord.Message) -> None:
+    if message.author == bot.user:
         return
 
     if message.channel.id == int(channel_id):
         await message.channel.send("Yurr")
 
 
+@bot.tree.command(name="scout", description="Scout a github user")
+async def scout(interaction: discord.Interaction, username: str) -> None:
+    await interaction.response.send_message(f"Scouting {username}!", ephemeral=True)
+
+
+@bot.event
+async def on_ready() -> None:
+    print(f"{bot.user} has connected to Discord!")
+    try:
+        await bot.tree.sync()
+        print("Synced commands")
+    except Exception as e:
+        print(e)
+
+
 def main() -> None:
-    client.run(bot_token)
+    bot.run(bot_token)
 
 
 if __name__ == "__main__":
