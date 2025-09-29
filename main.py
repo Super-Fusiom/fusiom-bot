@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from dotenv import dotenv_values
+from profiler.github import fetch_github_user
 
 dotenv_values = dotenv_values(".env")
 bot_token = dotenv_values["BOT_TOKEN"]
@@ -23,7 +24,7 @@ async def message_handler(message: discord.Message) -> None:
 
 @bot.tree.command(name="scout", description="Scout a github user")
 async def scout(interaction: discord.Interaction, username: str) -> None:
-    await interaction.response.send_message(f"Scouting {username}!", ephemeral=True)
+    await interaction.response.send_message(fetch_github_user(username))
 
 
 @bot.event
