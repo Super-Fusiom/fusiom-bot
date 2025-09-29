@@ -34,6 +34,10 @@ class GithubUser:
         return f"{self.username} has {len(self._repos)} repos"
 
 
-def fetch_github_user(username: str):
+def fetch_github_repos(username: str):
     spied = GithubUser(username)
     return f"This {spied.username} has {len(spied.repos)} repos"
+
+def fetch_github_all(username: str):
+    spied = GithubUser(username)
+    return f"This {spied.username} has {len(spied.repos)} repos and {len(spied.followers)} followers"
